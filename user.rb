@@ -42,6 +42,12 @@ class User
       end
     end
 
+    def get_rank_by_day(user_id)
+      rank = redis_store.get_rank_by_day(user_id)
+      no_of_users = redis_store.user_count
+      [rank, no_of_users]
+    end
+
     def key(user_name)
       "#{USER_PREFIX}#{user_name}"
     end

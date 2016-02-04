@@ -44,7 +44,8 @@ class Server < Sinatra::Base
       )
     event.save
 
-    send_response({ event_id: event.id })
+    rank, num_users = User.get_rank_by_day(params[:user_id])
+    send_response({ rank: rank, no_of_users: num_users })
   end
 
 end

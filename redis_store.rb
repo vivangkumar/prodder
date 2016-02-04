@@ -24,7 +24,22 @@ class RedisStore
       'user_id', user_id
     )
 
-    @redis.zadd(prefixed_key("#{EVENT_SET_KEY}#{user_id}"), score, event_key)
+    start_of_day = Time.at(timestamp.to_i).to_date.to_time.to_i
+    dayscoped_key = prefixed_key("#{EVENT_SET_KEY}#{user_id}")
+    @redis.zincrby(prefixed_key("#{EVENT_SET_KEY}#{start_of_day}"), score, dayscoped_key)
+  end
+
+  def get_rank_by_day(user_id)
+    start_of_day = Time.at(Time.now.to_i).to_date.to_time.to_i
+    key = prefixed_key("#{EVENT_SET_KEY}#{start_of_day}")
+    dayscoped_key = prefixed_key("#{EVENT_SET_KEY}#{user_id}")
+
+    @redis.zrevrank(key, dayscoped_key) + 1
+  end
+
+  def user_count
+    members = @redis.smembers(prefixed_key(USER_SET_PREFIX))
+    members.length
   end
 
   def store_apps(apps)
