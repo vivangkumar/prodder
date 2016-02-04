@@ -35,7 +35,10 @@ class User
       if (user = find(user_name))
         user
       else
-        new(user_name)
+        user = new(user_name)
+        user.save
+
+        user
       end
     end
 
