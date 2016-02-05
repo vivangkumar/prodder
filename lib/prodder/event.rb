@@ -1,7 +1,4 @@
 require 'securerandom'
-require_relative 'server'
-require_relative 'user'
-require_relative 'app'
 
 class Event
   EVENT_PREFIX = 'event:'

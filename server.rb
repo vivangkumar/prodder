@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'json'
-require_relative 'user'
-require_relative 'event'
+
+require './lib/prodder'
 
 class Server < Sinatra::Base
   configure { set :server, :puma }

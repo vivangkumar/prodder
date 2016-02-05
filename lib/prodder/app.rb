@@ -1,4 +1,3 @@
-require_relative 'server'
 require 'json'
 
 class App

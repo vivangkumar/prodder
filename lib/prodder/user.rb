@@ -1,5 +1,4 @@
 require 'securerandom'
-require_relative 'server'
 
 class User
   USER_PREFIX = 'user:'
