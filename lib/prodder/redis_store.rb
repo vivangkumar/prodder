@@ -59,6 +59,10 @@ class RedisStore
     @redis.zscore(prefixed_key('apps'), app_name).to_f
   end
 
+  def get_apps
+    @redis.zrange(prefixed_key('apps'), 0, -1, with_scores: true)
+  end
+
   private
 
   def prefixed_key(key)

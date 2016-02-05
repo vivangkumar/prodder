@@ -38,5 +38,11 @@ class Event
     def key(id)
       "#{EVENT_PREFIX}#{id}"
     end
+
+    def hostname_to_app_name(hostname)
+      App.get_all.select do
+        |app| hostname.downcase.include?(app.first.downcase)
+      end.flatten.first
+    end
   end
 end

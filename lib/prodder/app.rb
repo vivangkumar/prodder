@@ -12,6 +12,10 @@ class App
       redis_store.get_score(app_name)
     end
 
+    def get_all
+      redis_store.get_apps
+    end
+
     private
 
     def parse_apps

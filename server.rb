@@ -35,9 +35,14 @@ class Server < Sinatra::Base
   end
 
   post '/events' do
+    app_name = params[:app_name]
+    if (hostname = params[:hostname])
+      app_name = Event.hostname_to_app_name(hostname)
+    end
+
     event =
       Event.new(
-        params[:app_name],
+        app_name,
         params[:time_spent],
         params[:timestamp],
         params[:user_id],
