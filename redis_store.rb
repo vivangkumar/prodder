@@ -2,8 +2,8 @@ require 'redis'
 
 class RedisStore
   PRODDER_PREFIX = 'prodder:'
-  USER_SET_PREFIX = 'users'
-  EVENT_SET_KEY = 'events:'
+  USER_PREFIX = 'users'
+  EVENT_PREFIX = 'events:'
 
   def initialize
     @redis = Redis.new(url: ENV['REDIS_URL'])
@@ -11,7 +11,7 @@ class RedisStore
 
   def save_user(key, id)
     @redis.hmset(prefixed_key(key), 'id', id)
-    @redis.sadd(prefixed_key(USER_SET_PREFIX), prefixed_key(key))
+    @redis.sadd(prefixed_key(USER_PREFIX), prefixed_key(key))
   end
 
   def save_event(key, id, app_name, time_spent, timestamp, user_id, score)
@@ -24,22 +24,23 @@ class RedisStore
       'user_id', user_id
     )
 
-    start_of_day = Time.at(timestamp.to_i).to_date.to_time.to_i
-    dayscoped_key = prefixed_key("#{EVENT_SET_KEY}#{user_id}")
-    @redis.zincrby(prefixed_key("#{EVENT_SET_KEY}#{start_of_day}"), score, dayscoped_key)
+    key = prefixed_key("#{EVENT_PREFIX}#{user_id}")
+    @redis.zincrby(
+      dayscoped_key,
+      score,
+      key
+    )
   end
 
   def get_rank_by_day(user_id)
-    start_of_day = Time.at(Time.now.to_i).to_date.to_time.to_i
-    key = prefixed_key("#{EVENT_SET_KEY}#{start_of_day}")
-    dayscoped_key = prefixed_key("#{EVENT_SET_KEY}#{user_id}")
+    key = prefixed_key("#{EVENT_PREFIX}#{user_id}")
 
-    @redis.zrevrank(key, dayscoped_key) + 1
+    # Redis ranks are 0 based
+    @redis.zrevrank(dayscoped_key, key) + 1
   end
 
   def user_count
-    members = @redis.smembers(prefixed_key(USER_SET_PREFIX))
-    members.length
+    @redis.smembers(prefixed_key(USER_PREFIX)).length
   end
 
   def store_apps(apps)
@@ -62,5 +63,10 @@ class RedisStore
 
   def prefixed_key(key)
     "#{PRODDER_PREFIX}#{key}"
+  end
+
+  def dayscoped_key
+    start_of_day = Time.at(Time.now.to_i).to_date.to_time.to_i
+    prefixed_key("#{EVENT_PREFIX}#{start_of_day}")
   end
 end

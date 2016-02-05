@@ -28,7 +28,8 @@ class Event
       app_name: @app_name,
       time_spent: @time_spent,
       timestamp: @timestamp,
-      user_id: @user_id
+      user_id: @user_id,
+      score: @score
     }
   end
 
