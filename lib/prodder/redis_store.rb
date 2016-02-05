@@ -70,8 +70,10 @@ class RedisStore
     @redis.smembers(prefixed_key(USER_PREFIX)).each do |user_key|
       user = @redis.hgetall(user_key)
       found = user['id'] == user_id
+
       if found
         user_name = user_key.split(':').last
+        break
       end
     end
 
