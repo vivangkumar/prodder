@@ -51,7 +51,8 @@ class Server < Sinatra::Base
       event.save
 
       rank, num_users = User.get_rank_by_day(params[:user_id])
-      send_response({ rank: rank, no_of_users: num_users })
+      leader = User.get_leader
+      send_response({ rank: rank, no_of_users: num_users, leader: leader.user_name })
     else
       status 404
       send_response({ error: 'User not found' })

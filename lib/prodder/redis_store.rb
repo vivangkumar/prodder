@@ -80,6 +80,13 @@ class RedisStore
     [found, user_name]
   end
 
+  def find_leader
+    leader_key = @redis.zrange(dayscoped_key, 0, -1).last
+    user_id = leader_key.split(':').last
+
+    User.find_by_id(user_id)
+  end
+
   private
 
   def prefixed_key(key)
