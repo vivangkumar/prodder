@@ -1,0 +1,94 @@
+<link href='https://fonts.googleapis.com/css?family=Cabin:400,400italic,500,500italic,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
+
+<div id='content'>
+  <section id='header'>
+    Proddy
+  </section>
+
+  <section class='main-table'>
+    <table class='center' cellspacing="0">
+      <thead>
+        <tr>
+          <td></td>
+          <td>Username</td>
+          <td>Score</td>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each_with_index do |(username, score), index| %>
+          <tr id='<%= username %>'>
+            <td><%= index + 1 %>.</td>
+            <td><%= username %></td>
+            <td><%= score.to_i %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+
+<style>
+
+  #content {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+  }
+
+  .main-table {
+    text-align: center;
+    margin: auto;
+    width: 100%;
+  }
+
+  table.center {
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  #header {
+    font-weight: 700;
+    font-size: 40px;
+    padding: 30px 0;
+    color: #38AECC;
+  }
+
+  tbody {
+    font-size: 18px;
+  }
+
+  table tr td {
+    width: 95px;
+  }
+
+  tbody tr {
+    height: 50px;
+    color: white;
+  }
+
+  table tr:nth-child(odd) td{
+    background-color: #22AAA1;
+  }
+
+  table tr:nth-child(even) td{
+    background-color: #38AECC;
+    color: white;
+  }
+
+  thead {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+  }
+
+  thead tr td {
+    background-color: transparent !important;
+  }
+
+  body {
+    font-family: 'Cabin', sans-serif;
+    background-color: #022F40;
+  }
+
+</style>

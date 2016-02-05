@@ -32,6 +32,10 @@ class RedisStore
     )
   end
 
+  def get_sorted_users_with_scores
+    @redis.zrange(dayscoped_key, 0, -1, with_scores: true)
+  end
+
   def get_rank_by_day(user_id)
     key = prefixed_key("#{EVENT_PREFIX}#{user_id}")
 

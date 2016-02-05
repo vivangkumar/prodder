@@ -17,6 +17,12 @@ class Server < Sinatra::Base
   end
 
   get '/' do
+    content_type 'text/html'
+    @users = User.get_sorted_users_with_scores
+    erb :index
+  end
+
+  get '/api' do
     { prodder: 'API' }.to_json
   end
 

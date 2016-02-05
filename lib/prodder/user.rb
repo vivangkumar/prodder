@@ -54,6 +54,20 @@ class User
       redis_store.find_leader
     end
 
+    def get_sorted_users_with_scores
+      event_key_to_score = redis_store.get_sorted_users_with_scores
+      user_id_to_score = event_key_to_score.map do |event_key_with_score|
+        event_key = event_key_with_score.first
+        score = event_key_with_score.last
+
+        user_id = event_key.split(':').last
+        user_name = User.find_by_id(user_id).user_name
+
+        [user_name, score]
+      end
+      Hash[Hash[user_id_to_score].sort_by { |name, score| score }.reverse]
+    end
+
     def get_rank_by_day(user_id)
       rank = redis_store.get_rank_by_day(user_id)
       no_of_users = redis_store.user_count
