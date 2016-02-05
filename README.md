@@ -14,6 +14,10 @@ Simply run
 bundle install
 ```
 
+### Redis
+
+Make sure you've got Redis running
+
 ### Running the server
 
 Use `rackup`
