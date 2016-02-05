@@ -41,6 +41,15 @@ class User
       end
     end
 
+    def find_by_id(user_id)
+      found, user_name = redis_store.user_exists?(user_id)
+      if found && user_name
+        find(user_name)
+      else
+        nil
+      end
+    end
+
     def get_rank_by_day(user_id)
       rank = redis_store.get_rank_by_day(user_id)
       no_of_users = redis_store.user_count

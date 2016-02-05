@@ -35,22 +35,27 @@ class Server < Sinatra::Base
   end
 
   post '/events' do
-    app_name = params[:app_name]
-    if (hostname = params[:hostname])
-      app_name = Event.hostname_to_app_name(hostname)
+    if User.find_by_id(params[:user_id])
+      app_name = params[:app_name]
+      if (hostname = params[:hostname])
+        app_name = Event.hostname_to_app_name(hostname)
+      end
+
+      event =
+        Event.new(
+          app_name,
+          params[:time_spent],
+          params[:timestamp],
+          params[:user_id],
+        )
+      event.save
+
+      rank, num_users = User.get_rank_by_day(params[:user_id])
+      send_response({ rank: rank, no_of_users: num_users })
+    else
+      status 404
+      send_response({ error: 'User not found' })
     end
-
-    event =
-      Event.new(
-        app_name,
-        params[:time_spent],
-        params[:timestamp],
-        params[:user_id],
-      )
-    event.save
-
-    rank, num_users = User.get_rank_by_day(params[:user_id])
-    send_response({ rank: rank, no_of_users: num_users })
   end
 
 end

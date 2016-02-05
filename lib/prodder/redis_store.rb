@@ -63,6 +63,21 @@ class RedisStore
     @redis.zrange(prefixed_key('apps'), 0, -1, with_scores: true)
   end
 
+  def user_exists?(user_id)
+    found = false
+    user_name = nil
+
+    @redis.smembers(prefixed_key(USER_PREFIX)).each do |user_key|
+      user = @redis.hgetall(user_key)
+      found = user['id'] == user_id
+      if found
+        user_name = user_key.split(':').last
+      end
+    end
+
+    [found, user_name]
+  end
+
   private
 
   def prefixed_key(key)
